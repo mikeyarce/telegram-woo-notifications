@@ -79,7 +79,7 @@ class Options {
     }
 
     public function telegramforwp_general_settings_section_callback() {
-        echo "Section text";
+        echo '<a target="_blank" href="https://core.telegram.org/bots#6-botfather">Create a Telegram Bot</a> and add your Token below. <br />';
     }
     
     public function telegramforwp_woo_settings_section_callback() {
@@ -87,6 +87,7 @@ class Options {
     }
      
     public function telegramforwp_jetpack_settings_section_callback() {
+        echo 'You can enable the Jetpack Contact Form from here: <a href="/wp-admin/admin.php?page=jetpack_modules">Jetpack Modules</a> <br />';
     }
 
     public function telegramforwp_jp_cf_setting_callback() {
@@ -123,7 +124,6 @@ class Options {
         }
         ?>
         </select>
-
         <?php
     }
 
