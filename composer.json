@@ -1,6 +1,6 @@
 {
     "name": "mikeyarce/telegram-wp-integrations",
-    "description": "Jetpack",
+    "description": "Telegram Integrations for WordPress",
     "type": "wordpress-plugin",
     "autoload": {
         "psr-4": {
