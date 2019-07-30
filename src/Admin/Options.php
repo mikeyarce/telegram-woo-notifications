@@ -22,7 +22,7 @@ class Options {
     }
 
     public function register_page() {
-       add_submenu_page( 'options-general.php', 'Telegram For WP', 'Telegram For WP', 'manage_options', 'telegramforwp',  array( $this, 'telegramforwp_callback') );
+       add_submenu_page( 'options-general.php', 'Telegram Integrations', 'Telegram Integrations', 'manage_options', 'telegramforwp',  array( $this, 'telegramforwp_callback') );
     }
 
     public function register_settings() {
@@ -138,7 +138,7 @@ class Options {
         <?php
 
         echo '<div class="wrap">';
-        echo '<h2>Telegram for WP</h2>';
+        echo '<h2>Telegram Integrations</h2>';
         echo '</div>';
         settings_fields( 'telegramforwp' );
         do_settings_sections( 'telegramforwp' );
