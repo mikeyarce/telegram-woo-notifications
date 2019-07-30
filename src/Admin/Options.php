@@ -83,11 +83,16 @@ class Options {
     }
     
     public function telegramforwp_woo_settings_section_callback() {
-        echo "Select which categories you want to receive alerts for.  When an order is placed that contains a product with any of the selected categories, you will receive a Telegram message with the order details.";
+        echo "Select which categories you want to receive alerts for.  <br /> When an order is placed that contains a product with any of the selected categories, you will receive a Telegram message with the order details.";
     }
      
     public function telegramforwp_jetpack_settings_section_callback() {
-        echo 'You can enable the Jetpack Contact Form from here: <a href="/wp-admin/admin.php?page=jetpack_modules">Jetpack Modules</a> <br />';
+        if ( class_exists( 'Jetpack' ) && \Jetpack::is_module_active( 'contact-form' ) ) {
+            echo 'Jetpack\'s Contact Form module is enabled <span class="dashicons dashicons-yes-alt"></span>';
+        } else {
+            echo 'Jetpack\'s Contact Form module is disabled <span class="dashicons dashicons-dismiss"></span><br />';
+            echo 'You can enable the Jetpack Contact Form by visiting the <a href="/wp-admin/admin.php?page=jetpack_modules">Jetpack Modules page</a> <br />';
+        }
     }
 
     public function telegramforwp_jp_cf_setting_callback() {
