@@ -1,10 +1,10 @@
 {
-    "name": "mikeyarce/telegram-wp-integrations",
-    "description": "Telegram Integrations for WordPress",
+    "name": "mikeyarce/telegram-woo-notificationss",
+    "description": "Telegram WooCommerce Notifications",
     "type": "wordpress-plugin",
     "autoload": {
         "psr-4": {
-            "TelegramWPIntegrations\\": "src"
+            "TelegramWooNotifications\\": "src"
         }
     }
 }

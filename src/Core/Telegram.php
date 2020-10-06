@@ -1,6 +1,6 @@
 <?php
 
-namespace TelegramWPIntegrations\Core;
+namespace TelegramWooNotifications\Core;
 
 class Telegram {
     

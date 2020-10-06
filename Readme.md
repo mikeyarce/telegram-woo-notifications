@@ -23,9 +23,9 @@ This section describes how to install the plugin and get it working.
  
 e.g.
  
-1. Unzip the `telegram-wp-integrations` folder and upload the `telegram-wp-integrations` to the `/wp-content/plugins/` directory.
+1. Unzip the `telegram-woo-notifications` folder and upload the `telegram-woo-notificationss` to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Head to the Settings > Telegram Integrations to activate the integrations.
+3. Head to the Settings > Telegram for Woo to activate the integrations.
 
 == Screenshots ==
  

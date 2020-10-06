@@ -1,6 +1,6 @@
 <?php
 
-namespace TelegramWPIntegrations\Admin;
+namespace TelegramWooNotifications\Admin;
 
 class Options {
     
@@ -22,71 +22,79 @@ class Options {
     }
 
     public function register_page() {
-       add_submenu_page( 'options-general.php', 'Telegram Integrations', 'Telegram Integrations', 'manage_options', 'telegramforwp',  array( $this, 'telegramforwp_callback') );
+       add_submenu_page( 'options-general.php', 'Telegram for Woo', 'Telegram for Woo', 'manage_options', 'telegramforwoo',  array( $this, 'telegramforwoo_callback') );
     }
 
     public function register_settings() {
-        register_setting( 'telegramforwp', 'telegram_bot_token' );
-        register_setting( 'telegramforwp', 'telegramforwp_woo_categories_setting' );
-        register_setting( 'telegramforwp', 'telegramforwp_jp_cf_setting' );
+        register_setting( 'telegramforwoo', 'telegram_bot_token' );
+        register_setting( 'telegramforwoo', 'telegramforwoo_woo_categories_setting' );
+        register_setting( 'telegramforwoo', 'telegramforwoo_jp_cf_setting' );
 
         // General Settings
         add_settings_section(
-            'telegramforwp_general_settings_section',
+            'telegramforwoo_general_settings_section',
             'General', 
-            array( $this, 'telegramforwp_general_settings_section_callback' ),
-            'telegramforwp'
+            array( $this, 'telegramforwoo_general_settings_section_callback' ),
+            'telegramforwoo'
         );
 
         add_settings_field(
             'telegram_bot_token',
             'Telegram Bot Token', 
             array( $this, 'telegram_bot_token' ),
-            'telegramforwp',
-            'telegramforwp_general_settings_section'
+            'telegramforwoo',
+            'telegramforwoo_general_settings_section'
         );
 
         // Jetpack Settings
         add_settings_section(
-            'telegramforwp_jetpack_settings_section',
+            'telegramforwoo_jetpack_settings_section',
             'Jetpack Options', 
-            array( $this, 'telegramforwp_jetpack_settings_section_callback' ),
-            'telegramforwp'
+            array( $this, 'telegramforwoo_jetpack_settings_section_callback' ),
+            'telegramforwoo'
         );
         add_settings_field(
-            'telegramforwp_jp_cf_setting',
+            'telegramforwoo_jp_cf_setting',
             'Send Contact Form Submissions to Telegram', 
-            array( $this, 'telegramforwp_jp_cf_setting_callback' ),
-            'telegramforwp',
-            'telegramforwp_jetpack_settings_section'
+            array( $this, 'telegramforwoo_jp_cf_setting_callback' ),
+            'telegramforwoo',
+            'telegramforwoo_jetpack_settings_section'
         );
 
         // WooCommerce Settings
         add_settings_section(
-            'telegramforwp_woo_settings_section',
+            'telegramforwoo_woo_settings_section',
             'WooCommerce Options', 
-            array( $this, 'telegramforwp_woo_settings_section_callback' ),
-            'telegramforwp'
+            array( $this, 'telegramforwoo_woo_settings_section_callback' ),
+            'telegramforwoo'
         );
 
         add_settings_field(
-            'telegramforwp_woo_categories_setting',
+            'telegramforwoo_woo_categories_setting',
             'Choose Categories', 
-            array( $this, 'telegramforwp_woo_categories_setting_callback' ),
-            'telegramforwp',
-            'telegramforwp_woo_settings_section'
+            array( $this, 'telegramforwoo_woo_categories_setting_callback' ),
+            'telegramforwoo',
+            'telegramforwoo_woo_settings_section'
+        );
+
+        add_settings_field(
+            'telegramforwoo_woo_status_setting',
+            'Choose Order Status', 
+            array( $this, 'telegramforwoo_woo_status_setting_callback' ),
+            'telegramforwoo',
+            'telegramforwoo_woo_settings_section'
         );
     }
 
-    public function telegramforwp_general_settings_section_callback() {
+    public function telegramforwoo_general_settings_section_callback() {
         echo '<a target="_blank" href="https://core.telegram.org/bots#6-botfather">Create a Telegram Bot</a> and add your Token below. <br />';
     }
     
-    public function telegramforwp_woo_settings_section_callback() {
+    public function telegramforwoo_woo_settings_section_callback() {
         echo "Select which categories you want to receive alerts for.  <br /> When an order is placed that contains a product with any of the selected categories, you will receive a Telegram message with the order details.";
     }
      
-    public function telegramforwp_jetpack_settings_section_callback() {
+    public function telegramforwoo_jetpack_settings_section_callback() {
         if ( class_exists( 'Jetpack' ) && \Jetpack::is_module_active( 'contact-form' ) ) {
             echo 'Jetpack\'s Contact Form module is enabled <span class="dashicons dashicons-yes-alt"></span>';
         } else {
@@ -95,9 +103,9 @@ class Options {
         }
     }
 
-    public function telegramforwp_jp_cf_setting_callback() {
+    public function telegramforwoo_jp_cf_setting_callback() {
         ?>
-        <input type="checkbox" name="telegramforwp_jp_cf_setting" value="1" <?php checked(1, get_option('telegramforwp_jp_cf_setting'), true); ?> /> 
+        <input type="checkbox" name="telegramforwoo_jp_cf_setting" value="1" <?php checked(1, get_option('telegramforwoo_jp_cf_setting'), true); ?> /> 
         <?php
     }
 
@@ -112,12 +120,12 @@ class Options {
         <?php
     }
 
-    public function telegramforwp_woo_categories_setting_callback() {
-        $category_ids = get_option( 'telegramforwp_woo_categories_setting' );
+    public function telegramforwoo_woo_categories_setting_callback() {
+        $category_ids = get_option( 'telegramforwoo_woo_categories_setting' );
         $categories   = get_terms( 'product_cat', 'orderby=name&hide_empty=0' );
                 
         ?>
-        <select id="product_categories" name="telegramforwp_woo_categories_setting[]" class="woo-category wc-enhanced-select" multiple="multiple" style="width: 50%;" ?>" >
+        <select id="product_categories" name="telegramforwoo_woo_categories_setting[]" class="woo-category wc-enhanced-select" multiple="multiple" style="width: 50%;" ?>" >
         <?php
 
         if ( $categories ) {
@@ -131,17 +139,21 @@ class Options {
         </select>
         <?php
     }
+    public function telegramforwoo_woo_status_setting_callback() {
+        $status = get_option( 'telegramforwoo_woo_status_setting' );
+        
+    }
 
-    public function telegramforwp_callback() {
+    public function telegramforwoo_callback() {
         ?>
         <form method="post" action="options.php" enctype="multipart/form-data">
         <?php
 
         echo '<div class="wrap">';
-        echo '<h2>Telegram Integrations</h2>';
+        echo '<h2>Telegram for Woo</h2>';
         echo '</div>';
-        settings_fields( 'telegramforwp' );
-        do_settings_sections( 'telegramforwp' );
+        settings_fields( 'telegramforwoo' );
+        do_settings_sections( 'telegramforwoo' );
         submit_button();
         ?>
         </form>

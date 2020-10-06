@@ -1,7 +1,7 @@
 <?php
 
-namespace TelegramWPIntegrations\WooCommerce;
-use TelegramWPIntegrations\Core\Telegram;
+namespace TelegramWooNotifications\WooCommerce;
+use TelegramWooNotifications\Core\Telegram;
 
 class OrderActions {
 
@@ -15,7 +15,7 @@ class OrderActions {
         return $order_object;
     }
     private function get_categories() {
-        return get_option( 'telegramforwp_woo_categories_setting' );
+        return get_option( 'telegramforwoo_woo_categories_setting' );
     }
     private function has_valid_categories($product_array) {
         $category_ids = $this->get_categories();
@@ -29,6 +29,12 @@ class OrderActions {
         if ( !empty( array_intersect($category_ids, $product_categories ) ) ) {
             return true;
         }
+    }
+    private function get_status() {
+        
+    }
+    private function get_valid_status() {
+        
     }
     public function format_order_message($order_id) {
         $order_object = $this->get_order_details($order_id);
