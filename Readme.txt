@@ -14,8 +14,8 @@ Send WooCommerce Order details to Telegram.
 == Description ==
  
 This plugin will send WooCommerce order details to Telegram.
- 
-For WooCommerce Orders, you can choose which categories should be in the Order that you want to send to Telegram.  Right now, it sends a notification whenever an Order is transitioned into the "Processing" status.
+
+You can select which Order Statuses as well as which Categories of products you want to send to your Telegram Bot.
  
 == Installation ==
  
