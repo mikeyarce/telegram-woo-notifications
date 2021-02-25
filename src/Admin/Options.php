@@ -22,13 +22,14 @@ class Options {
     }
 
     public function register_page() {
-       add_submenu_page( 'options-general.php', 'Telegram for Woo', 'Telegram for Woo', 'manage_options', 'telegramforwoo',  array( $this, 'telegramforwoo_callback') );
+       add_submenu_page( 'options-general.php', 'Telegram for Woo', 'Telegram for Woo', 'manage_options', 'telegramforwoo',  array( $this, 'telegram_woo_notifications_callback') );
     }
 
     public function register_settings() {
         register_setting( 'telegramforwoo', 'telegram_bot_token' );
         register_setting( 'telegramforwoo', 'telegramforwoo_woo_categories_setting' );
         register_setting( 'telegramforwoo', 'telegramforwoo_jp_cf_setting' );
+        register_setting( 'telegramforwoo', 'telegramforwoo_woo_status_setting' );
 
         // General Settings
         add_settings_section(
@@ -74,9 +75,9 @@ class Options {
     public function telegramforwoo_general_settings_section_callback() {
         echo '<a target="_blank" href="https://core.telegram.org/bots#6-botfather">Create a Telegram Bot</a> and add your Token below. <br />';
     }
-    
+
     public function telegramforwoo_woo_settings_section_callback() {
-        echo "Select which categories you want to receive alerts for.  <br /> When an order is placed that contains a product with any of the selected categories, you will receive a Telegram message with the order details.";
+        echo "<p>Select which categories and order statuses you want to receive alerts for.  <br /> When an order is created or updated, a Telegram notifications will be sent if the order has a matching category or status below.<br /> If you want to get notifications for all orders or categories, select the \"All\" option.</p>";
     }
 
     public function telegramforwoo_jp_cf_setting_callback() {
@@ -99,7 +100,7 @@ class Options {
     public function telegramforwoo_woo_categories_setting_callback() {
         $category_ids = get_option( 'telegramforwoo_woo_categories_setting' );
         $categories   = get_terms( 'product_cat', 'orderby=name&hide_empty=0' );
-                
+
         ?>
         <select id="product_categories" name="telegramforwoo_woo_categories_setting[]" class="woo-category wc-enhanced-select" multiple="multiple" style="width: 50%;" ?>" >
         <?php
@@ -116,11 +117,19 @@ class Options {
         <?php
     }
     public function telegramforwoo_woo_status_setting_callback() {
-        $status = get_option( 'telegramforwoo_woo_status_setting' );
-        
+        $statuses = get_option( 'telegramforwoo_woo_status_setting' );
+        $wc_order_statuses = wc_get_order_statuses();
+        ?>
+        <select id="product_categories" name="telegramforwoo_woo_status_setting[]" class="woo-category wc-enhanced-select" multiple="multiple" style="width: 50%;" ?>" >
+        <?php
+        if ( $wc_order_statuses ) {
+            foreach ( $wc_order_statuses as $key => $status  ) {
+                echo '<option value="' . esc_attr( $key ) . '"' . wc_selected( $key, $statuses ) . '>' . esc_html( $status ) . '</option>'; //phpcs:ignore
+            }
+        }
     }
 
-    public function telegramforwoo_callback() {
+    public function telegram_woo_notifications_callback() {
         ?>
         <form method="post" action="options.php" enctype="multipart/form-data">
         <?php
