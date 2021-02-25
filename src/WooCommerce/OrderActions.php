@@ -127,6 +127,8 @@ class OrderActions {
 
     private function send_to_telegram($order_id) {
         $order_details = $this->format_order_message($order_id);
-        Telegram::post_to_telegram($order_details, 'New Order');
+        $message_title = ! empty( get_option( 't4wn_telegram_message_title' ) ) ? esc_html( get_option( 't4wn_telegram_message_title' ) ) : 'Order Notification';
+        error_log( print_r( $message_title, true ));
+        Telegram::post_to_telegram($order_details, $message_title );
     }
 }
