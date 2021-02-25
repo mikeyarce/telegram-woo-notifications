@@ -53,7 +53,7 @@ class OrderActions {
     }
 
     public function get_order_statuses_for_notifications() {
-        $statuses = $this->parse_order_statuses( get_option( 'telegramforwoo_woo_status_setting' ) ); 
+        $statuses = $this->parse_order_statuses( get_option( 't4wn_woo_status_setting' ) ); 
         $this->statuses = $statuses;
     }
 
@@ -71,7 +71,7 @@ class OrderActions {
 
     public function get_categories() {
         // Add Filter to exclude categories maybe?
-        $this->categories = get_option( 'telegramforwoo_woo_categories_setting' );
+        $this->categories = get_option( 't4wn_woo_categories_setting' );
     }
 
     private function format_order_message( $order_id ) {

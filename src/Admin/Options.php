@@ -25,68 +25,62 @@ class Options {
     }
 
     public function register_page() {
-       add_submenu_page( 'options-general.php', 'Telegram for Woo', 'Telegram for Woo', 'manage_options', 'telegramforwoo',  array( $this, 'telegram_woo_notifications_callback') );
+       add_submenu_page( 'options-general.php', 'Telegram for Woo', 'Telegram for Woo', 'manage_options', 'telegram-woo-notifications',  array( $this, 'telegram_woo_notifications_callback') );
     }
 
     public function register_settings() {
-        register_setting( 'telegramforwoo', 'telegram_bot_token' );
-        register_setting( 'telegramforwoo', 'telegramforwoo_woo_categories_setting' );
-        register_setting( 'telegramforwoo', 'telegramforwoo_jp_cf_setting' );
-        register_setting( 'telegramforwoo', 'telegramforwoo_woo_status_setting' );
+        register_setting( 'telegram_woo_notifications', 'telegram_bot_token' );
+        register_setting( 'telegram_woo_notifications', 't4wn_woo_categories_setting' );
+        register_setting( 'telegram_woo_notifications', 't4wn_jp_cf_setting' );
+        register_setting( 'telegram_woo_notifications', 't4wn_woo_status_setting' );
 
         // General Settings
         add_settings_section(
-            'telegramforwoo_general_settings_section',
+            't4wn_general_settings_section',
             'General', 
-            array( $this, 'telegramforwoo_general_settings_section_callback' ),
-            'telegramforwoo'
+            array( $this, 't4wn_general_settings_section_callback' ),
+            'telegram_woo_notifications'
         );
 
         add_settings_field(
             'telegram_bot_token',
             'Telegram Bot Token', 
             array( $this, 'telegram_bot_token' ),
-            'telegramforwoo',
-            'telegramforwoo_general_settings_section'
+            'telegram_woo_notifications',
+            't4wn_general_settings_section'
         );
 
         // WooCommerce Settings
         add_settings_section(
-            'telegramforwoo_woo_settings_section',
+            't4wn_woo_settings_section',
             'WooCommerce Options', 
-            array( $this, 'telegramforwoo_woo_settings_section_callback' ),
-            'telegramforwoo'
+            array( $this, 't4wn_woo_settings_section_callback' ),
+            'telegram_woo_notifications'
         );
 
         add_settings_field(
-            'telegramforwoo_woo_categories_setting',
+            't4wn_woo_categories_setting',
             'Choose Categories', 
-            array( $this, 'telegramforwoo_woo_categories_setting_callback' ),
-            'telegramforwoo',
-            'telegramforwoo_woo_settings_section'
+            array( $this, 't4wn_woo_categories_setting_callback' ),
+            'telegram_woo_notifications',
+            't4wn_woo_settings_section'
         );
 
         add_settings_field(
-            'telegramforwoo_woo_status_setting',
+            't4wn_woo_status_setting',
             'Choose Order Status', 
-            array( $this, 'telegramforwoo_woo_status_setting_callback' ),
-            'telegramforwoo',
-            'telegramforwoo_woo_settings_section'
+            array( $this, 't4wn_woo_status_setting_callback' ),
+            'telegram_woo_notifications',
+            't4wn_woo_settings_section'
         );
     }
 
-    public function telegramforwoo_general_settings_section_callback() {
+    public function t4wn_general_settings_section_callback() {
         echo '<a target="_blank" href="https://core.telegram.org/bots#6-botfather">Create a Telegram Bot</a> and add your Token below. <br />';
     }
 
-    public function telegramforwoo_woo_settings_section_callback() {
+    public function t4wn_woo_settings_section_callback() {
         echo "<p>Select which categories and order statuses you want to receive alerts for.  <br /> When an order is created or updated, a Telegram notifications will be sent if the order has a matching category or status below.<br /> If you want to get notifications for all orders or categories, select the \"All\" option.</p>";
-    }
-
-    public function telegramforwoo_jp_cf_setting_callback() {
-        ?>
-        <input type="checkbox" name="telegramforwoo_jp_cf_setting" value="1" <?php checked(1, get_option('telegramforwoo_jp_cf_setting'), true); ?> /> 
-        <?php
     }
 
     public function telegram_bot_token() {
@@ -100,12 +94,12 @@ class Options {
         <?php
     }
 
-    public function telegramforwoo_woo_categories_setting_callback() {
-        $category_ids = get_option( 'telegramforwoo_woo_categories_setting' );
+    public function t4wn_woo_categories_setting_callback() {
+        $category_ids = get_option( 't4wn_woo_categories_setting' );
         $categories   = get_terms( 'product_cat', 'orderby=name&hide_empty=0' );
 
         ?>
-        <select id="product_categories" name="telegramforwoo_woo_categories_setting[]" class="woo-category wc-enhanced-select" multiple="multiple" style="width: 50%;" ?>" >
+        <select id="product_categories" name="t4wn_woo_categories_setting[]" class="woo-category wc-enhanced-select" multiple="multiple" style="width: 50%;" ?>" >
         <?php
 
         if ( $categories ) {
@@ -119,11 +113,11 @@ class Options {
         </select>
         <?php
     }
-    public function telegramforwoo_woo_status_setting_callback() {
-        $statuses = get_option( 'telegramforwoo_woo_status_setting' );
+    public function t4wn_woo_status_setting_callback() {
+        $statuses = get_option( 't4wn_woo_status_setting' );
         $wc_order_statuses = wc_get_order_statuses();
         ?>
-        <select id="product_categories" name="telegramforwoo_woo_status_setting[]" class="woo-category wc-enhanced-select" multiple="multiple" style="width: 50%;" ?>" >
+        <select id="product_categories" name="t4wn_woo_status_setting[]" class="woo-category wc-enhanced-select" multiple="multiple" style="width: 50%;" ?>" >
         <?php
         if ( $wc_order_statuses ) {
             foreach ( $wc_order_statuses as $key => $status  ) {
@@ -140,8 +134,8 @@ class Options {
         echo '<div class="wrap">';
         echo '<h2>Telegram for Woo</h2>';
         echo '</div>';
-        settings_fields( 'telegramforwoo' );
-        do_settings_sections( 'telegramforwoo' );
+        settings_fields( 'telegram_woo_notifications' );
+        do_settings_sections( 'telegram_woo_notifications' );
         submit_button();
         ?>
         </form>
