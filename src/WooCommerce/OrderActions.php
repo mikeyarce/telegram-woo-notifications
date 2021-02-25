@@ -5,51 +5,91 @@ use TelegramWooNotifications\Core\Telegram;
 
 class OrderActions {
 
+    public $statuses;
+    public $categories;
+
     public function __construct() {
-        add_action( 'woocommerce_order_status_processing', array( $this, 'send_to_telegram' ) );
+
+        $this->add_actions_for_statuses();
+        $this->get_order_statuses_for_notifications();
+        $this->get_categories();
+        
     }
-    
+
+    public function add_actions_for_statuses() {
+        add_action( 'woocommerce_order_status_changed', function( $order_id, $status_from, $status_to ) {
+            if ( ! empty( $order_id ) && $this->validate_order_items( $order_id ) && $this->validate_order_status( $status_to ) ) {
+                $this->send_to_telegram( $order_id );
+            }           
+        }, 10, 3 );
+    }
+
+    private function get_order_categories( $order_id ) {
+        $order = new \WC_Order( $order_id );
+        $items = $order->get_items();
+        $categories = array();
+
+        foreach ($items as $item ) {
+            $product = $item->get_product();
+            $categories = $product->get_category_ids();
+        }
+        return $categories;
+    }
+
+    private function validate_order_items( $order_id ) {
+        $order_categories = $this->get_order_categories( $order_id );
+        if ( array_intersect( $order_categories, $this->categories ) ) {
+            return true;
+        }
+    }
+
+    private function parse_order_statuses( $statuses ) {
+        if ( $statuses && is_array( $statuses ) ) {
+            foreach ( $statuses as $key => $status ) {
+                $statuses[$key] = substr( $status, 3 );
+            }
+        }
+        return $statuses;
+    }
+
+    public function get_order_statuses_for_notifications() {
+        $statuses = $this->parse_order_statuses( get_option( 'telegramforwoo_woo_status_setting' ) ); 
+        $this->statuses = $statuses;
+    }
+
+    private function validate_order_status( $status ) {
+        if ( in_array( $status, $this->statuses, true ) ) {
+            return true;
+        }            
+    }
+
     private function get_order_details($order_id) {
         // When a new order happens, get the order
         $order_object = wc_get_order($order_id);
         return $order_object;
     }
-    private function get_categories() {
-        return get_option( 'telegramforwoo_woo_categories_setting' );
-    }
-    private function has_valid_categories($product_array) {
-        $category_ids = $this->get_categories();
-        $product_categories = array();
 
-        foreach ( $product_array as $product_id ) {
-            $product_cat_array = $product_id->get_category_ids();
-            $product_categories = array_merge($product_categories, $product_cat_array);
-        }
-    
-        if ( !empty( array_intersect($category_ids, $product_categories ) ) ) {
-            return true;
-        }
+    public function get_categories() {
+        // Add Filter to exclude categories maybe?
+        $this->categories = get_option( 'telegramforwoo_woo_categories_setting' );
     }
-    private function get_status() {
-        
-    }
-    private function get_valid_status() {
-        
-    }
-    public function format_order_message($order_id) {
+
+    private function format_order_message( $order_id ) {
         $order_object = $this->get_order_details($order_id);
         $product_array = array();
         
         $order_shipping_methods = $order_object->get_shipping_methods();
         $order_items = $order_object->get_items();
 
-        
+        $date_format = get_option( 'date_format' );
+        $time_format = get_option( 'time_format' );
+
         $text = '';
         $text .= "Order ID: " . $order_id . " \n";
-        $text .= "Order Created: " . $order_object->get_date_modified() . " \n";
-        $text .= "Order Modified: " . $order_object->get_date_modified() . " \n";
+        $text .= "Order Created: " . $order_object->get_date_created()->date( $date_format . ', ' .  $time_format ) . " \n";
+        $text .= "Order Modified: " . $order_object->get_date_modified()->date($date_format . ', ' .  $time_format) . " \n";
         $text .= "Customer Info: " . implode(' ', $order_object->get_address() ) . " \n";
-        foreach ( $order_items as $item_id => $item ) {
+        foreach ( $order_items as $item ) {
             $category_names = '';
             $product = $item->get_product();
             $product_array[] = $product;
@@ -74,19 +114,18 @@ class OrderActions {
             $text .= "Item: " . $product_title . " QTY: " . $product_quantity . " Subtotal: " . $product_subtotal . " Categories: " . $category_names. "\n";
         }
 
-        
         foreach ( $order_shipping_methods as $shipping_method ) {
             $text .= "Shipping: " . $shipping_method->get_method_title() . " Total: " . $shipping_method->get_total() . " \n";
             
         }
         $text .= "Payment Method: " . $order_object->get_payment_method_title() . " \n";
-        $text .= "\n Customer Note: " . $order_object->get_customer_note() . " \n";
+        $customer_note = ! empty( $order_object->get_customer_note() ) ? "\n Customer Note: " . $order_object->get_customer_note() . " \n" : '';
+        $text .= $customer_note;
 
-        if ( true === $this->has_valid_categories($product_array) ) {
-            return $text;
-        }
+        return esc_html( $text );
     }
-    public function send_to_telegram($order_id) {
+
+    private function send_to_telegram($order_id) {
         $order_details = $this->format_order_message($order_id);
         Telegram::post_to_telegram($order_details, 'New Order');
     }
