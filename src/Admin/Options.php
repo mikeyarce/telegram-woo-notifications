@@ -87,7 +87,7 @@ class Options {
         // get the value of the setting we've registered with register_setting()
         $setting = get_option( 'telegram_bot_token' );
         ?>
-        <input type="text" style="width:50%" name="telegram_bot_token" value="<?php echo isset( $setting ) ? esc_attr( $setting ) : ''; ?>">
+        <input class="telegram_bot_token_class" type="text" style="width:50%" name="telegram_bot_token" value="<?php echo isset( $setting ) ? esc_attr( $setting ) : ''; ?>">
         <p class="test-token">
             <input type="button"     action="#" value="Test Token" id="test-token">
         </p>
