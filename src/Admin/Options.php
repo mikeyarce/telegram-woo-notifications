@@ -11,8 +11,11 @@ class Options {
     }
     
     public function enqueue_scripts() {
-        // WooCommerce Stuff
-        wp_enqueue_style( 'select2-woo-to-telegram', WC()->plugin_url() . '/assets/css/select2.css', array(), WC_VERSION );
+        if ( class_exists( 'woocommerce' ) ) {
+            // WooCommerce Stuff
+            wp_enqueue_script( 'selectWoo' );
+            wp_enqueue_style( 'select2-telegram-woo-notifications', WC()->plugin_url() . '/assets/css/select2.css', array(), TELEGRAM_WOO_NOTIFICATIONS_VERSION );
+        }
         
         wp_enqueue_script( 'main.js', plugin_dir_url( __DIR__ ) . 'assets/js/main.js', 'selectWoo', 1.0, true );
         
