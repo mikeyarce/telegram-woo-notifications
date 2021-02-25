@@ -33,6 +33,7 @@ class Options {
         register_setting( 'telegram_woo_notifications', 't4wn_woo_categories_setting' );
         register_setting( 'telegram_woo_notifications', 't4wn_jp_cf_setting' );
         register_setting( 'telegram_woo_notifications', 't4wn_woo_status_setting' );
+        register_setting( 'telegram_woo_notifications', 't4wn_telegram_message_title' );
 
         // General Settings
         add_settings_section(
@@ -46,6 +47,14 @@ class Options {
             'telegram_bot_token',
             'Telegram Bot Token', 
             array( $this, 'telegram_bot_token' ),
+            'telegram_woo_notifications',
+            't4wn_general_settings_section'
+        );
+
+        add_settings_field(
+            't4wn_telegram_message_title',
+            'Telegram Message Title', 
+            array( $this, 't4wn_telegram_message_title_callback' ),
             'telegram_woo_notifications',
             't4wn_general_settings_section'
         );
@@ -92,6 +101,14 @@ class Options {
             <input type="button"     action="#" value="Test Token" id="test-token">
         </p>
         <?php
+    }
+
+    public function t4wn_telegram_message_title_callback() {
+        $setting = get_option( 't4wn_telegram_message_title' );
+        ?>
+        <input type="text" style="width:50%" name="t4wn_telegram_message_title" value="<?php echo isset( $setting ) ? esc_attr( $setting ) : ''; ?>">
+        <?php
+
     }
 
     public function t4wn_woo_categories_setting_callback() {
