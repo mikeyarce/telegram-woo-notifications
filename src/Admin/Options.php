@@ -9,9 +9,9 @@ class Options {
         add_action( 'admin_head', array($this, 'enqueue_scripts'));
         add_action( 'admin_init', array($this, 'register_settings'));
     }
+    
     public function enqueue_scripts() {
         // WooCommerce Stuff
-        wp_enqueue_script( 'selectWoo' );
         wp_enqueue_style( 'select2-woo-to-telegram', WC()->plugin_url() . '/assets/css/select2.css', array(), WC_VERSION );
         
         wp_enqueue_script( 'main.js', plugin_dir_url( __DIR__ ) . 'assets/js/main.js', 'selectWoo', 1.0, true );
