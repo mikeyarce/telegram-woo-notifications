@@ -46,21 +46,6 @@ class Options {
             'telegramforwoo_general_settings_section'
         );
 
-        // Jetpack Settings
-        add_settings_section(
-            'telegramforwoo_jetpack_settings_section',
-            'Jetpack Options', 
-            array( $this, 'telegramforwoo_jetpack_settings_section_callback' ),
-            'telegramforwoo'
-        );
-        add_settings_field(
-            'telegramforwoo_jp_cf_setting',
-            'Send Contact Form Submissions to Telegram', 
-            array( $this, 'telegramforwoo_jp_cf_setting_callback' ),
-            'telegramforwoo',
-            'telegramforwoo_jetpack_settings_section'
-        );
-
         // WooCommerce Settings
         add_settings_section(
             'telegramforwoo_woo_settings_section',
@@ -92,15 +77,6 @@ class Options {
     
     public function telegramforwoo_woo_settings_section_callback() {
         echo "Select which categories you want to receive alerts for.  <br /> When an order is placed that contains a product with any of the selected categories, you will receive a Telegram message with the order details.";
-    }
-     
-    public function telegramforwoo_jetpack_settings_section_callback() {
-        if ( class_exists( 'Jetpack' ) && \Jetpack::is_module_active( 'contact-form' ) ) {
-            echo 'Jetpack\'s Contact Form module is enabled <span class="dashicons dashicons-yes-alt"></span>';
-        } else {
-            echo 'Jetpack\'s Contact Form module is disabled <span class="dashicons dashicons-dismiss"></span><br />';
-            echo 'You can enable the Jetpack Contact Form by visiting the <a href="/wp-admin/admin.php?page=jetpack_modules">Jetpack Modules page</a> <br />';
-        }
     }
 
     public function telegramforwoo_jp_cf_setting_callback() {

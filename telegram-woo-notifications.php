@@ -23,10 +23,8 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' )){
 }
 
 use TelegramWooNotifications\Admin\Options;
-use TelegramWooNotifications\Jetpack\ContactForm;
 use TelegramWooNotifications\WooCommerce\OrderActions;
 
 
 $options = new Options();
-$contact_form = new ContactForm();
 $order_actions = new OrderActions();
